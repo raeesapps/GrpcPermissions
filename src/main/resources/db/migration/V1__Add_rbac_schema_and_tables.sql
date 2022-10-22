@@ -1,13 +1,18 @@
-CREATE TABLE rbac.users (id uuid PRIMARY KEY);
-
-CREATE TABLE rbac.roles (
-    id uuid PRIMARY KEY,
-    rName text,
-    resources text[],
-    verbs text[]
+CREATE TABLE rbac.users
+(
+    id uuid PRIMARY KEY
 );
 
-CREATE TABLE rbac.bindings (
+CREATE TABLE rbac.roles
+(
+    id        uuid PRIMARY KEY,
+    rName     text,
+    resources text[],
+    verbs     text[]
+);
+
+CREATE TABLE rbac.bindings
+(
     userId uuid,
     roleId uuid,
     PRIMARY KEY (userId, roleId),
