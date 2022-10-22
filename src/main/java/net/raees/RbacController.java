@@ -3,6 +3,8 @@ package net.raees;
 import io.grpc.stub.StreamObserver;
 import net.raees.permissions.*;
 
+import java.sql.SQLException;
+
 public final class RbacController extends RBACGrpc.RBACImplBase {
 
     private final RbacService service;
@@ -17,8 +19,14 @@ public final class RbacController extends RBACGrpc.RBACImplBase {
     }
 
     @Override
-    public void addUser(User request, StreamObserver<Empty> responseObserver) {
-        super.addUser(request, responseObserver);
+    public void addUser(User user, StreamObserver<Empty> responseObserver) {
+        try {
+            service.addUser(user);
+            responseObserver.onNext(Empty.getDefaultInstance());
+            responseObserver.onCompleted();
+        } catch (SQLException sqlException) {
+            responseObserver.onError(sqlException);
+        }
     }
 
     @Override
