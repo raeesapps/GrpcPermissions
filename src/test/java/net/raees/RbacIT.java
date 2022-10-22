@@ -1,6 +1,7 @@
 package net.raees;
 
 import io.grpc.ManagedChannelBuilder;
+import net.raees.permissions.BindUserRequest;
 import net.raees.permissions.RBACGrpc;
 import net.raees.permissions.Role;
 import net.raees.permissions.User;
@@ -77,6 +78,20 @@ public final class RbacIT {
         Assertions.assertEquals(roleName, resultSet.getString(1));
         Assertions.assertEquals("{nodes}", resultSet.getString(2));
         Assertions.assertEquals("{get}", resultSet.getString(3));
+    }
+
+    @Test
+    public void bindUser() throws SQLException {
+        var userUuid = "f9c3de3d-1fea-4d7c-a8b0-29f63c4c3454";
+        blockingStub.addUser(User.newBuilder().setUuid(userUuid).build());
+        var addRoleResponse = blockingStub.addRole(Role.newBuilder().setName("get-all-nodes").addResources("nodes").addVerbs("get").build());
+        var roleUuid = addRoleResponse.getUuid();
+        blockingStub.bindUser(BindUserRequest.newBuilder().setUserUuid(userUuid).addRoleUuids(roleUuid).build());
+
+        var resultSet = executeQuery("SELECT userId, roleId FROM rbac.bindings", s -> {});
+        Assertions.assertTrue(resultSet.next());
+        Assertions.assertEquals(userUuid, resultSet.getString(1));
+        Assertions.assertEquals(roleUuid, resultSet.getString(2));
     }
 
     @AfterAll
