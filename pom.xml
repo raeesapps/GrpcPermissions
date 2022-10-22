@@ -81,7 +81,7 @@
                 <configuration>
                     <url>jdbc:postgresql://localhost:5432/postgres</url>
                     <user>postgres</user>
-                    <password>${env.PERMISSIONS_POSTGRES_VERSION}</password>
+                    <password>${env.PERMISSIONS_POSTGRES_PASSWORD}</password>
                     <schemas>
                         <schema>rbac</schema>
                     </schemas>
