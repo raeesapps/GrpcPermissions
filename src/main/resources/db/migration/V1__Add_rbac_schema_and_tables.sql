@@ -1,5 +1,3 @@
-CREATE SCHEMA rbac;
-
 CREATE TABLE rbac.users (id uuid PRIMARY KEY);
 
 CREATE TABLE rbac.roles (
