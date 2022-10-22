@@ -24,7 +24,7 @@ public final class RbacService {
         }
     }
 
-    public void addRole(Role role) throws SQLException {
+    public UUID addRole(Role role) throws SQLException {
         var uuid = UUID.randomUUID();
 
         var resources = IntStream
@@ -50,5 +50,7 @@ public final class RbacService {
 
             statement.executeUpdate();
         }
+
+        return uuid;
     }
 }

@@ -17,8 +17,8 @@ public final class RbacController extends RBACGrpc.RBACImplBase {
     @Override
     public void addRole(Role role, StreamObserver<AddRoleResponse> responseObserver) {
         try {
-            service.addRole(role);
-            responseObserver.onNext(AddRoleResponse.newBuilder().setUuid(UUID.randomUUID().toString()).build());
+            var uuid = service.addRole(role);
+            responseObserver.onNext(AddRoleResponse.newBuilder().setUuid(uuid.toString()).build());
             responseObserver.onCompleted();
         } catch (SQLException sqlException) {
             responseObserver.onError(sqlException);
