@@ -31,7 +31,7 @@ public final class GrpcServer {
         }
     }
 
-    public static GrpcServer newGrpcServer(int port, List<BindableService> services) throws IOException, InterruptedException {
+    public static GrpcServer newGrpcServer(int port, boolean blockThread, List<BindableService> services) throws IOException, InterruptedException {
         var serverBuilder = ServerBuilder.forPort(port);
         for (var service : services) {
             serverBuilder.addService(service);
@@ -47,15 +47,19 @@ public final class GrpcServer {
             }
             logger.info("*** server shut down");
         }));
-        grpcServer.blockUntilShutdown();
+
+        if (blockThread) {
+            grpcServer.blockUntilShutdown();
+        }
+
         return grpcServer;
     }
 
-    public static GrpcServer newGrpcServer(int grpcServerPort, String databaseUrl, String databaseUser) throws IOException, InterruptedException {
+    public static GrpcServer newGrpcServer(int grpcServerPort, boolean blockThread, String databaseUrl, String databaseUser) throws IOException, InterruptedException {
         var controller = new RbacController(new RbacService(new RbacDataStore(databaseUrl, databaseUser)));
         var controllers = new ArrayList<BindableService>();
         controllers.add(controller);
 
-        return newGrpcServer(grpcServerPort, controllers);
+        return newGrpcServer(grpcServerPort, blockThread, controllers);
     }
 }

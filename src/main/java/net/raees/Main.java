@@ -10,6 +10,7 @@ public final class Main {
         try {
             GrpcServer.newGrpcServer(
                     50012,
+                    true,
                     System.getenv("PERMISSIONS_POSTGRES_URL"),
                     System.getenv("PERMISSIONS_POSTGRES_USER")
             );
