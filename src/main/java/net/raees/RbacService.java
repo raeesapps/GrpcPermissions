@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-public class RbacService {
+public final class RbacService {
     private final RbacDataStore dataStore;
 
     RbacService(RbacDataStore dataStore) {
