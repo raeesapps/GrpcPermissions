@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "net.raees.permissions";
+option objc_class_prefix = "PERM";
+
+package net.raees.permissions;
+
+service RBAC {
+  rpc AddUser (User) returns (Empty) {}
+  rpc RemoveUser(User) returns (Empty) {}
+  rpc AddRole(Role) returns (AddRoleResponse) {}
+  rpc RemoveRole(RemoveRoleRequest) returns (Empty) {}
+  rpc BindUser(BindUserRequest) returns (Empty) {}
+  rpc UnbindUser(BindUserRequest) returns (Empty) {}
+  rpc IsAuthorized(ResourceAuthorizationRequest) returns (ResourceAuthorizationResponse) {}
+}
+
+message Empty {
+
+}
+
+message User {
+  string uuid = 1;
+}
+
+message Role {
+  string name = 2;
+  repeated string resources = 3;
+  repeated string verbs = 4;
+}
+
+message RemoveRoleRequest {
+  string uuid = 1;
+}
+
+message AddRoleResponse {
+  string uuid = 1;
+}
+
+message BindUserRequest {
+  string userUuid = 1;
+  repeated string roleUuids = 2;
+}
+
+message ResourceAuthorizationRequest {
+  string userUuid = 1;
+  string resource = 2;
+  repeated string verbs = 3;
+}
+
+message ResourceAuthorizationResponse {
+  bool result = 1;
+}
