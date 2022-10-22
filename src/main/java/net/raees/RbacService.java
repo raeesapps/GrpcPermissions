@@ -18,7 +18,7 @@ public class RbacService {
 
     public void addUser(User user) throws SQLException {
         try (var connection = dataStore.getConnection()) {
-            var statement = connection.prepareStatement("INSERT INTO rbac.users (id) VALUES(?)");
+            var statement = connection.prepareStatement("INSERT INTO rbac.users (id) VALUES(?::uuid)");
             statement.setString(1, user.getUuid());
             statement.executeUpdate();
         }
