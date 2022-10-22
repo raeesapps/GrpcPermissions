@@ -79,8 +79,8 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>9.5.1</version>
                 <configuration>
-                    <url>jdbc:postgresql://localhost:5432/postgres</url>
-                    <user>postgres</user>
+                    <url>${env.PERMISSIONS_POSTGRES_URL}</url>
+                    <user>${env.PERMISSIONS_POSTGRES_USER}</user>
                     <password>${env.PERMISSIONS_POSTGRES_PASSWORD}</password>
                     <schemas>
                         <schema>rbac</schema>

@@ -5,6 +5,7 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -48,5 +49,13 @@ public final class GrpcServer {
         }));
         grpcServer.blockUntilShutdown();
         return grpcServer;
+    }
+
+    public static GrpcServer newGrpcServer(int grpcServerPort, String databaseUrl, String databaseUser) throws IOException, InterruptedException {
+        var controller = new RbacController(new RbacService(new RbacDataStore(databaseUrl, databaseUser)));
+        var controllers = new ArrayList<BindableService>();
+        controllers.add(controller);
+
+        return newGrpcServer(grpcServerPort, controllers);
     }
 }
