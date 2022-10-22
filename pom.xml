@@ -20,6 +20,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.5.0</version>
+        </dependency>
+        <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty-shaded</artifactId>
             <version>${grpc.version}</version>
