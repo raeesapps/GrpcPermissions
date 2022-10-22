@@ -2,6 +2,7 @@ package net.raees;
 
 import io.grpc.ManagedChannelBuilder;
 import net.raees.permissions.RBACGrpc;
+import net.raees.permissions.Role;
 import net.raees.permissions.User;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -52,6 +53,30 @@ public final class RbacIT {
         });
         Assertions.assertTrue(resultSet.next());
         Assertions.assertEquals(uuid, resultSet.getString(1));
+    }
+
+    @Test
+    public void addRole() throws SQLException {
+        var roleName = "get-all-nodes";
+        var role = Role
+                .newBuilder()
+                .setName(roleName)
+                .addResources("nodes")
+                .addVerbs("get")
+                .build();
+        blockingStub.addRole(role);
+
+        var resultSet = executeQuery("SELECT rName, resources, verbs  FROM rbac.roles WHERE rName = ?", s -> {
+            try {
+                s.setString(1, roleName);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+        Assertions.assertTrue(resultSet.next());
+        Assertions.assertEquals(roleName, resultSet.getString(1));
+        Assertions.assertEquals("{nodes}", resultSet.getString(2));
+        Assertions.assertEquals("{get}", resultSet.getString(3));
     }
 
     @AfterAll
