@@ -53,4 +53,30 @@ public final class RbacService {
 
         return uuid;
     }
+
+    public void bindUser(BindUserRequest request) throws SQLException {
+        var roleIds = IntStream
+                .range(0, request.getRoleUuidsCount())
+                .mapToObj(i -> request.getRoleUuids(i))
+                .toArray(String[]::new);
+
+        Connection connection = null;
+        try {
+            connection = dataStore.getConnection();
+            connection.setAutoCommit(false);
+            for (String roleId : roleIds) {
+                var statement = connection.prepareStatement("INSERT INTO rbac.bindings (userId, roleId) VALUES(?::uuid,?::uuid)");
+                statement.setString(1, request.getUserUuid());
+                statement.setString(2, roleId);
+
+                statement.executeUpdate();
+                connection.commit();
+            }
+        } catch (SQLException sqlException) {
+            connection.rollback();
+            throw sqlException;
+        } finally {
+            connection.close();
+        }
+    }
 }

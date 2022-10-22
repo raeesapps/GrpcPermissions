@@ -4,7 +4,6 @@ import io.grpc.stub.StreamObserver;
 import net.raees.permissions.*;
 
 import java.sql.SQLException;
-import java.util.UUID;
 
 public final class RbacController extends RBACGrpc.RBACImplBase {
 
@@ -38,7 +37,13 @@ public final class RbacController extends RBACGrpc.RBACImplBase {
 
     @Override
     public void bindUser(BindUserRequest request, StreamObserver<Empty> responseObserver) {
-        super.bindUser(request, responseObserver);
+        try {
+            service.bindUser(request);
+            responseObserver.onNext(Empty.getDefaultInstance());
+            responseObserver.onCompleted();
+        } catch (SQLException sqlException) {
+            responseObserver.onError(sqlException);
+        }
     }
 
     @Override
